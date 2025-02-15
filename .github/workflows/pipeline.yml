@@ -6,7 +6,7 @@ on:
         - main
 
 jobs:
-  code_analysis_jobs:
+  code_analysis_job:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,19 @@ jobs:
       run: npm install
     - name: "run code analysis"
       run: npm run test
+    
+  build_and_push:
+
+    runs-on: ubuntu-latest
+    needs: ["code_analysis_job", "unit_testing_job"]
+    steps:
+    - name: "checkout repository"
+      uses: actions/checkout@v4
+
+    - name: "build docker image"
+      run: docker build -t houriamami/back-session6 .
+    - name: "list docker images"
+      run: docker images
 
     
  
@@ -42,16 +55,7 @@ jobs:
    
    
    
-   
-    # -cloner le prj
-   
-   
-    #code analysis code
-    # -install des deps
 
-    # -run code analysis
-
-  #unit testing
 
   #build and push
   #deployment 
