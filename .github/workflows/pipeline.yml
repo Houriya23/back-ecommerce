@@ -43,19 +43,19 @@ jobs:
     - name: "list docker images"
       run: docker images
 
-    
- 
- 
-   
-   
-   
-   
-   
-   
-   
-   
-   
 
+    - name: "login to Docker Hub"
+      uses: docker/login-action@v3
+      with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: "push docker image to docker hub"
+      run: docker push houriamami/back-session6
 
-  #build and push
-  #deployment 
+    - name: "tag image "
+      run: docker tag houriamami/back-session6 houriamami/back-session6:${{github.run_number}}
+
+    - name: "push tagged image "
+      run: docker push houriamami/back-session6:${{github.run_number}}
+
