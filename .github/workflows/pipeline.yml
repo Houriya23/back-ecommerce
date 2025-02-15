@@ -1,0 +1,43 @@
+name: "workflow backend"
+
+on:
+  push:
+      branches:
+        - main
+
+jobs:
+  code_analysis_jobs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "checkout repository"
+      uses: actions/checkout@v4
+
+    - name: "list folders"
+      run: ls -la
+
+    
+ 
+ 
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    # -cloner le prj
+   
+   
+    #code analysis code
+    # -install des deps
+
+    # -run code analysis
+
+  #unit testing
+
+  #build and push
+  #deployment 
