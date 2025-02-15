@@ -13,8 +13,10 @@ jobs:
     - name: "checkout repository"
       uses: actions/checkout@v4
 
-    - name: "list folders"
-      run: ls -la
+    - name: "install dependencies"
+      run: npm install
+    - name: "run code analysis"
+      run: npm run lint
 
     
  
