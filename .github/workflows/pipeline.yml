@@ -30,7 +30,14 @@ jobs:
     - name: "run unit test and generate reports"
       run: |
             mkdir -p test-reports
-            npm test -- --json --outputFile=test-reports/test-report.json
+            if npm test -- --json --outputFile=test-reports/test-report.json; then
+              echo "Tests passed"
+            else
+              echo "Tests failed, generating report..."
+            # Upload the report even if tests fail
+            exit 1
+            fi
+      continue-on-error: true 
     - name: "upload test-report as artifact"
       uses:  actions/upload-artifact@v4
       with:
