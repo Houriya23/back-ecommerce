@@ -54,7 +54,7 @@ jobs:
             echo "::error::Tests failed. Stopping workflow."
             exit 1  # This will stop the workflow
           fi
-      
+      continue-on-error: false
     
     
   build_and_push:
