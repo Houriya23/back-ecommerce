@@ -29,20 +29,19 @@ jobs:
       run: npm install
     - name: "run unit test and generate reports"
       run: |
-           mkdir -p test-reports
-           npm test -- --json --outputFile=test-reports/test-report.json || echo "Tests failed, generating report..."
+          mkdir -p test-reports
+          npm test -- --json --outputFile=test-reports/test-report.json || TEST_FAILED=$?
+          if [ -n "${TEST_FAILED}" ]; then
+            echo "Tests failed, generating report..."
+          exit 1
+          fi
       shell: bash
-
     - name: "upload test-report as artifact"
       uses: actions/upload-artifact@v4
       with:
         name: test-report
         path: test-reports/test-report.json
-        
-    # Fail the job if the tests failed
-    - name: "Fail job if tests failed"
-      if: ${{ failure() }}
-      run: exit 1
+      continue-on-error: false
     
     
   build_and_push:
