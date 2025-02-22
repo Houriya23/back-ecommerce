@@ -30,10 +30,13 @@ jobs:
     - name: "run unit test and generate reports"
       run: |
            mkdir -p test-reports
-           npm test -- --json --outputFile=test-reports/test-report.json || TEST_FAILED=$?
-           # Check if the tests failed
-           if [ -n "${TEST_FAILED}" ]; then
-            echo "Tests failed, but report will still be generated."
+           # Run tests and generate the report
+           npm test -- --json --outputFile=test-reports/test-report.json || true
+           # Check if the report contains failures
+           if grep -q '"failed": [1-9]' test-reports/test-report.json; then
+             echo "Tests failed, but report will still be generated."
+             echo "::error::Tests failed. Stopping workflow."
+             exit 1
            fi
       shell: bash
     - name: "upload test-report as artifact"
