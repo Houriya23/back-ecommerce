@@ -27,8 +27,16 @@ jobs:
 
     - name: "install dependencies"
       run: npm install
-    - name: "run code analysis"
-      run: npm run test
+    - name: "run unit test and generate reports"
+      run: |
+            mkdir -p test-reports
+            npm test -- --json --outputFile=test-reports/test-report.json
+    - name: "upload test-report as artifact"
+      uses:  actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: test-reports/test-report.json
+    
     
   build_and_push:
 
