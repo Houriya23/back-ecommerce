@@ -29,33 +29,27 @@ jobs:
       run: npm install
     - name: "run unit test and generate reports"
       run: |
-           mkdir -p test-reports
-           # Run tests and generate the report (even if the tests fail)
-           npm test -- --json --outputFile=test-reports/test-report.json || true
+          mkdir -p test-reports
+          # Run tests and generate the report (even if the tests fail)
+          npm test -- --json --outputFile=test-reports/test-report.json || true
           
-           # Upload the report even if the tests fail
-           echo "Test report will be generated."
-           echo "Uploading the report..."
-        
-      shell: bash
-
     - name: "upload test-report as artifact"
       uses: actions/upload-artifact@v4
       with:
           name: test-report
           path: test-reports/test-report.json
 
-        # We use continue-on-error: true so the workflow does not stop here even if the tests fail.
     - name: "check if tests failed and stop workflow"
       run: |
-          # Check if the report contains failures
-          if grep -q '"failed": [1-9]' test-reports/test-report.json; then
-            echo "Tests failed. Workflow will stop."
-            echo "::error::Tests failed. Stopping workflow."
-            exit 1  # This will stop the workflow
-          fi
-      continue-on-error: false
-    
+          # Simple check using Node.js to see if the tests failed
+          node -e "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('test-reports/test-report.json'));
+            if (report.success === false || report.numFailedTests > 0) {
+              console.error('::error::Tests failed. Stopping workflow.');
+              process.exit(1);
+            }
+          "
     
   build_and_push:
 
